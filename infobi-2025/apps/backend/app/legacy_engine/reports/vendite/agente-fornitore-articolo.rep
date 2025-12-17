@@ -1,0 +1,42 @@
+{
+  "title_report": "Venduto Agente-Fornitore-Articolo",
+  "initialConfig": {
+    "rowGroups": ["Agente", "Fornitore", "Articolo"],
+    "pivotCols": [],
+    "valueCols": [
+      {"field": "Venduto", "aggFunc": "sum"},
+      {"field": "Costo", "aggFunc": "sum"}
+    ],
+    "defaultSort": {
+      "column": {"pivotKey": "", "field": "Venduto", "aggFunc": "sum"},
+      "direction": "desc",
+      "type": "value"
+    }
+  },
+  "availableFields": [
+    "Esercizio", "Agente", "Fornitore", "Articolo", "Venduto", "Costo"
+  ],
+  "calculatedMetrics": [
+    {
+      "name": "MargineAssolutoVendAcq",
+      "label": "Margine Abs.",
+      "operation": "subtract",
+      "field1": "Venduto",
+      "aggFunc1": "sum",
+      "field2": "Costo",
+      "aggFunc2": "sum",
+      "decimals": 2
+    },
+    {
+      "name": "MarginePercentualeVendAcq",
+      "label": "Margine %",
+      "operation": "percentage_margin_on_field1",
+      "field1": "Venduto",
+      "aggFunc1": "sum",
+      "field2": "Costo",
+      "aggFunc2": "sum",
+      "decimals": 2
+    }
+    
+  ]
+}

@@ -1,0 +1,8 @@
+select 
+trim(MVRAGSOC) as Fornitore,
+trim(MVCODICE) as Articolo, 
+-- sum(MVQTAMOV) as Qta, 
+-- max(MVUNIMIS) as UM, 
+sum(TOTACQ)  as Acquistato 
+from {{AZIENDA}}INFOABI group by MVRAGSOC, MVCODICE
+

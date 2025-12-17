@@ -1,0 +1,23 @@
+{
+  "title_report": "Acquistato Fornitore-Articoli",
+  "initialConfig": {
+    "rowGroups": ["Fornitore", "Articolo"],
+    "pivotCols": [],
+    "valueCols": [
+      {"field": "Acquistato", "aggFunc": "sum"},      
+      {"field": "Qta_mq", "aggFunc": "sum"},
+      {"field": "Qta_pz", "aggFunc": "sum"},
+      {"field": "Qta_cl", "aggFunc": "sum"},
+      {"field": "Qta_kg", "aggFunc": "sum"}
+    ],
+    "defaultSort": {
+      "column": {"pivotKey": "", "field": "Acquistato", "aggFunc": "sum"},
+      "direction": "desc",
+      "type": "value"
+    }
+  },
+  "availableFields": [
+    "Esercizio", "Fornitore", "Articolo", "Acquistato", "Qta_mq", "Qta_pz", "Qta_cl", "Qta_kg"
+  ],
+  "calculatedMetrics": []
+}

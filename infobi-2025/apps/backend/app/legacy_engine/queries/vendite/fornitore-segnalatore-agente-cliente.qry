@@ -1,0 +1,13 @@
+select 
+MVFORABI,
+MVCODAG3,
+MVCODAGE,
+MVCODCON,
+max(rtrim(MVRAGFOR)) as Fornitore,
+max(rtrim(MVDESAG3)) as Segnalatore,
+max(rtrim(MVDESAGE)) as Agente,
+max(rtrim(MVRAGSOC)) as Cliente,
+sum(isnull(TOTVEN,0)) Venduto,
+sum( isnull( {{_COSTO_}} ,0) ) as Costo
+from {{AZIENDA}}INFOVBI group by MVFORABI,MVCODAG3,MVCODAGE,MVCODCON
+

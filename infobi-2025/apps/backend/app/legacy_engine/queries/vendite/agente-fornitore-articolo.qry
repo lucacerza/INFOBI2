@@ -1,0 +1,11 @@
+select 
+MVCODAGE,
+MVFORABI,
+MVCODICE,
+rtrim(MVCODICE) as Articolo,
+max(rtrim(MVDESAGE)) as Agente,
+max(rtrim(MVRAGFOR)) as Fornitore,
+sum(isnull(TOTVEN,0)) Venduto,
+sum( isnull( {{_COSTO_}} ,0) ) as Costo
+from {{AZIENDA}}INFOVBI group by MVCODAGE,MVFORABI,MVCODICE 
+

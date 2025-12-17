@@ -1,0 +1,17 @@
+{
+  "title_report": "Acquistato Fornitore-Articoli",
+  "initialConfig": {
+    "rowGroups": ["Fornitore", "Articolo"],
+    "pivotCols": [],
+    "valueCols": [
+      {"field": "Acquistato", "aggFunc": "sum"}
+    ],
+    "defaultSort": {
+      "column": {"pivotKey": "", "field": "Acquistato", "aggFunc": "sum"},
+      "direction": "desc",
+      "type": "value"
+    }
+  },
+  "availableFields": ["Esercizio", "Fornitore", "Articolo", "Acquistato"],
+  "calculatedMetrics": []
+}
