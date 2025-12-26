@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8090'
+
 export function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -20,10 +22,15 @@ export function LoginForm() {
     setError('')
 
     try {
-      const res = await fetch('/api/v1/auth/login', {
+      // Form data per il backend FastAPI
+      const formData = new URLSearchParams()
+      formData.append('username', username)
+      formData.append('password', password)
+
+      const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
       })
 
       if (res.ok) {
@@ -31,7 +38,10 @@ export function LoginForm() {
         
         // Salva token e user info
         localStorage.setItem('token', data.access_token)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('user', JSON.stringify({
+          username: username,
+          role: 'admin' // TODO: get from response
+        }))
         
         // Redirect alla dashboard
         router.push('/dashboard')
@@ -40,7 +50,8 @@ export function LoginForm() {
         setError(error.detail || 'Credenziali non valide')
       }
     } catch (err) {
-      setError('Errore di connessione')
+      setError('Errore di connessione al backend')
+      console.error('Login error:', err)
     } finally {
       setLoading(false)
     }
