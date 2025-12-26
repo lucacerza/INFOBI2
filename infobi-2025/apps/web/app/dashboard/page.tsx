@@ -48,16 +48,19 @@ export default function DashboardPage() {
 
     try {
       console.log('Loading initial data...')
-      const [serversData, reportsData] = await Promise.all([
-        apiClient.getServers(token),
-        apiClient.getReports(token)
-      ])
-
-      console.log('Servers loaded:', serversData)
-      console.log('Reports loaded:', reportsData)
       
+      // Carica servers
+      console.log('Calling apiClient.getServers...')
+      const serversData = await apiClient.getServers(token)
+      console.log('Servers loaded:', serversData)
       setServers(serversData)
+      
+      // Carica reports
+      console.log('Calling apiClient.getReports...')
+      const reportsData = await apiClient.getReports(token)
+      console.log('Reports loaded:', reportsData)
       setReports(reportsData)
+      
     } catch (error) {
       console.error('Errore caricamento dati:', error)
       alert(`Errore caricamento: ${error}`)
