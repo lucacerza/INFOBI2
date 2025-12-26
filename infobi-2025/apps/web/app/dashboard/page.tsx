@@ -42,15 +42,20 @@ export default function DashboardPage() {
     if (!token) return
 
     try {
+      console.log('Loading initial data...')
       const [serversData, reportsData] = await Promise.all([
         apiClient.getServers(token),
         apiClient.getReports(token)
       ])
 
+      console.log('Servers loaded:', serversData)
+      console.log('Reports loaded:', reportsData)
+      
       setServers(serversData)
       setReports(reportsData)
     } catch (error) {
       console.error('Errore caricamento dati:', error)
+      alert(`Errore caricamento: ${error}`)
     }
   }
 
