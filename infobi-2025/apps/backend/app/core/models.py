@@ -138,10 +138,12 @@ def create_default_admin():
         existing_admin = db.query(User).filter(User.username == "admin").first()
         
         if not existing_admin:
+            # Usa password corta per evitare limiti bcrypt (max 72 bytes)
+            default_password = "admin"
             admin_user = User(
                 username="admin",
                 email="admin@infobi.local",
-                hashed_password=PasswordHandler.hash_password("admin123"),
+                hashed_password=PasswordHandler.hash_password(default_password),
                 full_name="Amministratore",
                 role="admin",
                 is_active=True
@@ -150,7 +152,7 @@ def create_default_admin():
             db.add(admin_user)
             db.commit()
             
-            print("✅ Utente admin creato (username: admin, password: admin123)")
+            print(f"✅ Utente admin creato (username: admin, password: {default_password})")
         else:
             print("ℹ️ Utente admin già esistente")
             

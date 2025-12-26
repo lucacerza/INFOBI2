@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     APP_DIR: Path = Path(__file__).resolve().parent.parent
     QUERIES_PATH: Path = APP_DIR / "legacy_engine" / "queries"
     REPORTS_PATH: Path = APP_DIR / "legacy_engine" / "reports"
+    
+    # Database interno (SQLite)
+    DATABASE_PATH: Path = APP_DIR / "data" / "infobi.db"
 
     # --- CONFIGURAZIONE SQL SERVER ---
     # Inserisci qui i dati del tuo SQL Server Express

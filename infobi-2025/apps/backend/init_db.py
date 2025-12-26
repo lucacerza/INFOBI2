@@ -36,7 +36,7 @@ def main():
         print()
         print("🔑 Credenziali di default:")
         print("   Username: admin")
-        print("   Password: admin123")
+        print("   Password: admin")
         print()
         print("⚠️  IMPORTANTE: Cambia la password dopo il primo login!")
     else:
