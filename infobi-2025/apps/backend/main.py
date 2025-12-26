@@ -1,6 +1,6 @@
 import uvicorn
-import os                                   # <--- Aggiunto per fixare l'errore
-from pathlib import Path                    # <--- Aggiunto per fixare l'errore
+import os
+from pathlib import Path
 from typing import Dict, Any, Optional
 
 from fastapi import FastAPI
@@ -8,21 +8,34 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.core.config import settings
-from app.legacy_engine.query_loader import legacy_engine
-from app.legacy_engine.rep_loader import rep_loader
+from app.core.models import init_db, create_default_admin
+
+# Import routers
+from app.routers import auth, servers, reports
 
 # --- Configurazione App ---
 app = FastAPI(
     title=settings.PROJECT_NAME,
+    version="2.0.0",
+    description="InfoBi Platform - Agnostic Database BI with Apache Arrow",
     docs_url="/docs",
     openapi_url="/openapi.json"
 )
+
+# Inizializza database al startup
+@app.on_event("startup")
+async def startup_event():
+    """Inizializzazione al startup"""
+    init_db()
+    create_default_admin()
+    print("✅ InfoBi Platform avviata")
 
 # --- Configurazione CORS ---
 origins = [
     "http://localhost:3000",
     "http://localhost:8000",
     "http://localhost:8090",
+    "http://127.0.0.1:3000",
 ]
 
 app.add_middleware(
@@ -31,12 +44,18 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Type"]
 )
 
 # --- Modelli Dati ---
 class QueryRequest(BaseModel):
     query_name: str
     params: Optional[Dict[str, Any]] = {}
+
+# --- Include Routers ---
+app.include_router(auth.router)
+app.include_router(servers.router)
+app.include_router(reports.router)
 
 # --- Rotte API ---
 
@@ -92,24 +111,10 @@ def list_reports():
         
     return grouped
 
-@app.post("/api/v1/run-legacy")
-async def run_legacy_query(payload: QueryRequest):
-    """
-    Esegue query + Legge configurazione .rep
-    """
-    # 1. Esegue Dati
-    data = await legacy_engine.execute(payload.query_name, payload.params)
-    
-    # 2. Legge Configurazione JSON (.rep)
-    # Assumiamo che il file .rep abbia lo stesso nome del file .qry
-    config = rep_loader.load_config(payload.query_name)
-    
-    return {
-        "query": payload.query_name,
-        "count": len(data),
-        "config": config, # <--- ORA IL FRONTEND RICEVE LE ISTRUZIONI
-        "data": data
-    }
+# --- Router Registration ---
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(servers.router, prefix="/api/v1/servers", tags=["Database Servers"])
+app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
 
 if __name__ == "__main__":
     # Avvio su porta 8090

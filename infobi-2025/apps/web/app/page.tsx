@@ -1,103 +1,30 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { BiGrid } from '@/components/pivot-table/BiGrid'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Folder, FileText, Play, Filter } from 'lucide-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
-// Tipi
-type ReportGroup = Record<string, { name: string, path: string }[]>
-
-interface RunQueryResponse {
-  query: string
-  count: number
-  config: Record<string, unknown> | null 
-  data: Record<string, unknown>[]
-}
-
-interface QueryParams {
-  codazi: string
-  AZIENDA: string
-  _COSTO_: string
-  year1?: number
-  year2?: number
-  date_from?: string
-  date_to?: string
-}
-
-export default function DashboardPage() {
-  const [reports, setReports] = useState<ReportGroup>({})
-  const [selectedReport, setSelectedReport] = useState<string>("")
-  
-  const [mode, setMode] = useState<'YEARS' | 'DATES'>('YEARS')
-  const [year1, setYear1] = useState("2023")
-  const [year2, setYear2] = useState("2024")
-  const [dateFrom, setDateFrom] = useState("2024-01-01")
-  const [dateTo, setDateTo] = useState("2024-12-31")
-  const [codAzi, setCodAzi] = useState("DITTA1.")
-  
-  const [data, setData] = useState<Record<string, unknown>[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [config, setConfig] = useState<any>(null)
+export default function HomePage() {
+  const router = useRouter()
 
   useEffect(() => {
-    fetch('/api/v1/reports-list')
-      .then(res => res.json())
-      .then((data: ReportGroup) => setReports(data))
-      .catch(err => console.error("Errore lista report:", err))
-  }, [])
+    // Redirect automatico al login
+    const token = localStorage.getItem('token')
+    if (token) {
+      router.push('/dashboard')
+    } else {
+      router.push('/login')
+    }
+  }, [router])
 
-  const handleRunReport = async () => {
-    if (!selectedReport) return
-    setLoading(true)
-    setError("")
-    setData([])
-    setConfig(null)
-
-    try {
-      const params: QueryParams = { 
-        codazi: codAzi,
-        AZIENDA: codAzi,
-        _COSTO_: "MVTOTCOS"
-      }
-
-      if (mode === 'YEARS') {
-        params.year1 = parseInt(year1)
-        params.year2 = parseInt(year2)
-      } else {
-        params.date_from = dateFrom
-        params.date_to = dateTo
-      }
-
-      const res = await fetch('/api/v1/run-legacy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query_name: selectedReport,
-          params: params
-        })
-      })
-
-      const json = await res.json() as RunQueryResponse
-      
-      if (!res.ok) {
-        const errorMsg = (json as unknown as { detail: string }).detail || "Errore sconosciuto"
-        throw new Error(errorMsg)
-      }
-      
-      if (Array.isArray(json.data)) {
-          setData(json.data)
-          setConfig(json.config)
-      } else {
-          console.error("Formato risposta imprevisto:", json)
-          setError("Il backend non ha restituito un array di dati.")
-      }
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-2">InfoBi Platform</h1>
+        <p className="text-gray-600">Caricamento...</p>
+      </div>
+    </div>
+  )
+}
 
     } catch (err) {
       if (err instanceof Error) {
