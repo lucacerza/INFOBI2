@@ -12,9 +12,11 @@ interface User {
 interface AuthState {
   token: string | null
   user: User | null
+  _hasHydrated: boolean
   setAuth: (token: string, user: User) => void
   logout: () => void
   isAdmin: () => boolean
+  setHasHydrated: (state: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -22,6 +24,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       token: null,
       user: null,
+      _hasHydrated: false,
       
       setAuth: (token, user) => set({ token, user }),
       
@@ -36,10 +39,17 @@ export const useAuthStore = create<AuthState>()(
       isAdmin: () => {
         const user = get().user
         return user?.role === 'admin'
+      },
+      
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state })
       }
     }),
     {
-      name: 'auth-storage'
+      name: 'auth-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      }
     }
   )
 )

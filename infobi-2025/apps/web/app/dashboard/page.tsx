@@ -15,7 +15,7 @@ import { apiClient } from '@/lib/api-client'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { token, user, logout } = useAuthStore()
+  const { token, user, logout, _hasHydrated } = useAuthStore()
   const [activeTab, setActiveTab] = useState('reports')
   const [servers, setServers] = useState<any[]>([])
   const [reports, setReports] = useState<any[]>([])
@@ -23,6 +23,9 @@ export default function DashboardPage() {
   const [perspectiveConfig, setPerspectiveConfig] = useState<any>(null)
 
   useEffect(() => {
+    // Aspetta che Zustand si idridi da localStorage
+    if (!_hasHydrated) return
+    
     // Verifica autenticazione
     console.log('Dashboard - Token:', token ? 'Present' : 'Missing')
     console.log('Dashboard - User:', user)
@@ -33,7 +36,7 @@ export default function DashboardPage() {
     }
 
     loadInitialData()
-  }, [token])
+  }, [token, _hasHydrated])
 
   const loadInitialData = async () => {
     if (!token) return
