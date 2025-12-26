@@ -20,6 +20,10 @@ export function SQLEditor({ onExecute, onSave, initialValue = '', servers = [] }
   const [isExecuting, setIsExecuting] = useState(false)
 
   const handleExecute = async () => {
+    console.log('SQLEditor - Execute clicked')
+    console.log('SQLEditor - Selected server:', selectedServer)
+    console.log('SQLEditor - SQL:', sql)
+    
     if (!selectedServer) {
       alert('Seleziona un server')
       return
@@ -34,10 +38,15 @@ export function SQLEditor({ onExecute, onSave, initialValue = '', servers = [] }
     
     try {
       if (onExecute) {
+        console.log('SQLEditor - Calling onExecute...')
         await onExecute(sql, parseInt(selectedServer))
+        console.log('SQLEditor - onExecute completed')
+      } else {
+        console.error('SQLEditor - onExecute is not defined!')
       }
     } catch (error) {
       console.error('Errore esecuzione:', error)
+      alert(`Errore: ${error}`)
     } finally {
       setIsExecuting(false)
     }
