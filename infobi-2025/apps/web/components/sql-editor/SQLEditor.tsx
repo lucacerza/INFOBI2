@@ -19,6 +19,9 @@ export function SQLEditor({ onExecute, onSave, initialValue = '', servers = [] }
   const [selectedServer, setSelectedServer] = useState<string>('')
   const [isExecuting, setIsExecuting] = useState(false)
 
+  // Debug: log servers prop
+  console.log('SQLEditor - Servers prop:', servers)
+
   const handleExecute = async () => {
     console.log('SQLEditor - Execute clicked')
     console.log('SQLEditor - Selected server:', selectedServer)
