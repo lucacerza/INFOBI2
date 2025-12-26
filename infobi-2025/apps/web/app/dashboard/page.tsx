@@ -213,7 +213,10 @@ export default function DashboardPage() {
 
             {user?.role === 'admin' && (
               <TabsContent value="admin" className="h-full m-0 overflow-auto">
-                <ServerManager token={token || undefined} />
+                <ServerManager 
+                  token={token || undefined} 
+                  apiUrl="http://localhost:8090/api/v1"
+                />
               </TabsContent>
             )}
           </div>
