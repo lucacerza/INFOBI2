@@ -9,9 +9,22 @@ from datetime import datetime
 from pathlib import Path
 import os
 
-# Base directory per il DB
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-DB_PATH = BASE_DIR / "data" / "infobi.db"
+"""
+Database interno SQLite per persistenza
+Modelli: Server, Report, User
+"""
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from datetime import datetime
+from pathlib import Path
+import os
+
+# Importa il path dal config centralizzato
+from app.core.config import settings
+
+# Path del database
+DB_PATH = settings.DATABASE_PATH
 
 # Crea directory se non esiste
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
