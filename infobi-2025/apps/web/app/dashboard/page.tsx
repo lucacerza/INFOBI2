@@ -68,15 +68,24 @@ export default function DashboardPage() {
   }
 
   const handleExecuteQuery = async (sql: string, serverId: number) => {
+    console.log('Dashboard - handleExecuteQuery called')
+    console.log('Dashboard - SQL:', sql)
+    console.log('Dashboard - Server ID:', serverId)
+    console.log('Dashboard - Token:', token ? 'Present' : 'Missing')
+    
     if (!token) return
 
     try {
+      console.log('Dashboard - Calling apiClient.executeQuery...')
       const result = await apiClient.executeQuery(token, serverId, sql, 'json')
+      console.log('Dashboard - Query result:', result)
+      
       setCurrentData(result.data || [])
       setActiveTab('viewer')
+      console.log('Dashboard - Switched to viewer tab')
     } catch (error) {
       console.error('Errore esecuzione query:', error)
-      alert('Errore durante l\'esecuzione della query')
+      alert('Errore durante l\'esecuzione della query: ' + error)
     }
   }
 
