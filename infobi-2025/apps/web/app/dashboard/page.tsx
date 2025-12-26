@@ -22,6 +22,11 @@ export default function DashboardPage() {
   const [currentData, setCurrentData] = useState<any[]>([])
   const [perspectiveConfig, setPerspectiveConfig] = useState<any>(null)
 
+  // Debug: log quando servers cambia
+  useEffect(() => {
+    console.log('Servers state updated:', servers)
+  }, [servers])
+
   useEffect(() => {
     // Aspetta che Zustand si idridi da localStorage
     if (!_hasHydrated) return
