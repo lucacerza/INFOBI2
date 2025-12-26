@@ -22,19 +22,11 @@ export default function DashboardPage() {
   const [currentData, setCurrentData] = useState<any[]>([])
   const [perspectiveConfig, setPerspectiveConfig] = useState<any>(null)
 
-  // Debug: log quando servers cambia
-  useEffect(() => {
-    console.log('Servers state updated:', servers)
-  }, [servers])
-
   useEffect(() => {
     // Aspetta che Zustand si idridi da localStorage
     if (!_hasHydrated) return
     
     // Verifica autenticazione
-    console.log('Dashboard - Token:', token ? 'Present' : 'Missing')
-    console.log('Dashboard - User:', user)
-    
     if (!token) {
       router.push('/login')
       return
@@ -47,20 +39,11 @@ export default function DashboardPage() {
     if (!token) return
 
     try {
-      console.log('Loading initial data...')
-      
-      // Carica servers
-      console.log('Calling apiClient.getServers...')
       const serversData = await apiClient.getServers(token)
-      console.log('Servers loaded:', serversData)
       setServers(serversData)
       
-      // Carica reports
-      console.log('Calling apiClient.getReports...')
       const reportsData = await apiClient.getReports(token)
-      console.log('Reports loaded:', reportsData)
       setReports(reportsData)
-      
     } catch (error) {
       console.error('Errore caricamento dati:', error)
       alert(`Errore caricamento: ${error}`)
@@ -68,21 +51,12 @@ export default function DashboardPage() {
   }
 
   const handleExecuteQuery = async (sql: string, serverId: number) => {
-    console.log('Dashboard - handleExecuteQuery called')
-    console.log('Dashboard - SQL:', sql)
-    console.log('Dashboard - Server ID:', serverId)
-    console.log('Dashboard - Token:', token ? 'Present' : 'Missing')
-    
     if (!token) return
 
     try {
-      console.log('Dashboard - Calling apiClient.executeQuery...')
       const result = await apiClient.executeQuery(token, serverId, sql, 'json')
-      console.log('Dashboard - Query result:', result)
-      
       setCurrentData(result.data || [])
       setActiveTab('viewer')
-      console.log('Dashboard - Switched to viewer tab')
     } catch (error) {
       console.error('Errore esecuzione query:', error)
       alert('Errore durante l\'esecuzione della query: ' + error)
