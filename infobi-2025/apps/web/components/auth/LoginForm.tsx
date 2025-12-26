@@ -46,8 +46,16 @@ export function LoginForm() {
         // Redirect alla dashboard
         router.push('/dashboard')
       } else {
-        const error = await res.json()
-        setError(error.detail || 'Credenziali non valide')
+        const errorData = await res.json()
+        
+        // Gestisci errori Pydantic (array di oggetti con type, loc, msg)
+        if (Array.isArray(errorData.detail)) {
+          setError(errorData.detail.map((e: any) => e.msg).join(', '))
+        } else if (typeof errorData.detail === 'string') {
+          setError(errorData.detail)
+        } else {
+          setError('Credenziali non valide')
+        }
       }
     } catch (err) {
       setError('Errore di connessione al backend')
