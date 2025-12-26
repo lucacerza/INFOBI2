@@ -24,6 +24,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Verifica autenticazione
+    console.log('Dashboard - Token:', token ? 'Present' : 'Missing')
+    console.log('Dashboard - User:', user)
+    
     if (!token) {
       router.push('/login')
       return
