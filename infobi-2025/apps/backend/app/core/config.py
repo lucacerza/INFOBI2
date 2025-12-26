@@ -8,11 +8,12 @@ class Settings(BaseSettings):
     
     # Percorsi Cartelle
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent.parent
-    APP_DIR: Path = Path(__file__).resolve().parent.parent
-    QUERIES_PATH: Path = APP_DIR / "legacy_engine" / "queries"
-    REPORTS_PATH: Path = APP_DIR / "legacy_engine" / "reports"
+    # APP_DIR deve puntare a apps/backend (non apps/backend/app!)
+    APP_DIR: Path = Path(__file__).resolve().parent.parent.parent
+    QUERIES_PATH: Path = APP_DIR / "app" / "legacy_engine" / "queries"
+    REPORTS_PATH: Path = APP_DIR / "app" / "legacy_engine" / "reports"
     
-    # Database interno (SQLite)
+    # Database interno (SQLite) - ora in apps/backend/data/
     DATABASE_PATH: Path = APP_DIR / "data" / "infobi.db"
 
     # --- CONFIGURAZIONE SQL SERVER ---
