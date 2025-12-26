@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useAuthStore } from '@/lib/auth-store'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8090'
 
@@ -15,6 +16,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const { setAuth } = useAuthStore()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,9 +33,8 @@ export function LoginForm() {
       if (res.ok) {
         const data = await res.json()
         
-        // Salva token e user info
-        localStorage.setItem('token', data.access_token)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        // Salva nel Zustand store (che persiste automaticamente)
+        setAuth(data.access_token, data.user)
         
         // Redirect alla dashboard
         router.push('/dashboard')
